@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DigitalCraft's Alumni Registry">
+    <meta name="author" content="Eric Schow">
+    <title>DigitalCrafts Alumni</title>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel="stylesheet">
+    <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+  </head>
+  <body>
+    <div class='row'>
+      <div class='col-xs-6'>hello</div>
+      <div class='col-xs-6'>hello 2</div>
+    </div>
+    <div id="app" v-cloak>
+      <p>{{ message }}</p>
+      <alum></alum>
+      <p v-if="seen">Now you see me</p>
+
+    </div>
+    <ul id="studentsList">
+      <li v-for="student in students">
+        <h2>{{ student.name }}</h2>
+        <br>
+        {{ student.description }}
+      </li>
+    </ul>
+
+  </body>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue.js!',
+      seen: true
+    }
+  })
+  var s1 = {name: 'Eric', description: "test description"}
+  var s2 = {name: 'Frank', description: 'frank description'}
+  var students = new Vue({
+    el: "#studentsList",
+    data: {
+      students: [s1, s2]
+    }
+  })
+    // register
+  Vue.component('alum', {
+    template: '<div class="col-md-4 alum"><h2>{{data.name}}</h2></div>'
+  })
+  </script>
+</html>
+
+<!-- view-source:traffic.houstontranstar.org/roadclosures/ -->
