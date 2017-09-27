@@ -6,7 +6,8 @@ body {
 }
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #1466A2;
+  background: url('/img/DigitalCrafts-Logo-Wrench.png') no-repeat fixed bottom / 70%;
+  background-color: #0a3351;
 }
 .centered {
   margin: auto;
@@ -25,7 +26,7 @@ body {
   padding: 1em;
 }
 .alum {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
   border: 5px solid #1E8ECE;
   border-radius: 10px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
