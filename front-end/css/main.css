@@ -6,8 +6,12 @@ body {
 }
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: url('/img/DigitalCrafts-Logo-Wrench.png') no-repeat fixed bottom / 70%;
-  background-color: #0a3351;
+  background: #0a3351 url('/img/DigitalCrafts-Logo-Wrench.png') no-repeat fixed bottom / 90%;
+}
+@media (min-width: 768px) {
+  body {
+    background: #0a3351 url('/img/DigitalCrafts-Logo-Wrench.png') no-repeat fixed bottom / 70%;
+  }
 }
 .centered {
   margin: auto;
@@ -16,14 +20,25 @@ body {
               CUSTOM COMPONENT STYLES
 */
 #studentContainer {
-  padding: 0 3rem;
+  padding: 8rem 3rem 0 3rem;
 }
 .alum-row {
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (min-width: 768px) {
+  .alum-row {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
 .alum-container {
-  padding: 1em;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .alum-container {
+    padding: 1em;
+  }
 }
 .alum {
   background-color: rgba(255, 255, 255, 0.8);
@@ -32,6 +47,9 @@ body {
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
   padding: 1rem;
   text-align: justify;
+}
+.alum h4 {
+  text-align: center;
 }
 .alum p {
   margin-left: 1rem;
@@ -46,6 +64,12 @@ body {
 }
 .icons {
   text-align: center;
+  font-size: 2em;
+}
+@media (min-width: 768px) {
+  .icons {
+    font-size: 3em;
+  }
 }
 .thick {
   border-width: 2px;
