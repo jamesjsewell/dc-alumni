@@ -9,8 +9,8 @@
     <title>DigitalCrafts Alumni Registry</title>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel="stylesheet">
     <script defer src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
-    <link href="./font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="./css/main.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/main.css" rel="stylesheet" type="text/css">
     <script defer src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
   </head>
   <body style="">
@@ -27,7 +27,7 @@
                 <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand centered" href="#">
-                <img src="/img/DigitalCrafts-Logo-Wrench.png"
+                <img src="/static/img/DigitalCrafts-Logo-Wrench.png"
                 alt='DigitalCrafts wrench logo'
                 width="45px">
               </a>
@@ -79,10 +79,6 @@
         </nav>
       </header>
       <content class='container-fluid'>
-        <!-- <div class='row'>
-          <div class='col-xs-6'>hello</div>
-          <div class='col-xs-6'>hello 2</div>
-        </div> -->
         <studentslist></studentslist>
       </content>
     </div>
@@ -199,6 +195,9 @@
     }
   })
 
+  // var app = new Vue({
+  //   el: '#app',
+  // })
   const app = new Vue({
     el: '#app'
   })
