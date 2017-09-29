@@ -43,13 +43,38 @@ body {
 .alum {
   background-color: rgba(255, 255, 255, 0.8);
   border: 5px solid #1E8ECE;
-  border-radius: 10px;
+  border-style: ridge;
+  border-radius: 3px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
   padding: 1rem;
+  margin: 2rem;
   text-align: justify;
 }
+@media (min-width: 768px) {
+  .alum {
+    margin: 0;
+  }
+}
 .alum h4 {
-  text-align: center;
+  text-align: left;
+  padding-left: 3rem;
+  font-size: 2rem;
+  color: black;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+.alum h6 {
+  color: #A6AAAb;
+  padding-right: 3rem;
+  text-align: right;
+  margin-bottom: 0;
+  margin-top: 3px;
+}
+.alum hr:first-of-type {
+  margin-top: 0.5rem;
+}
+.alum hr:last-of-type {
+  margin-bottom: .5rem;
 }
 .alum p {
   margin-left: 1rem;
@@ -64,7 +89,7 @@ body {
 }
 .icons {
   text-align: center;
-  font-size: 2em;
+  font-size: 2.5em;
 }
 @media (min-width: 768px) {
   .icons {
