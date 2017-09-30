@@ -84,23 +84,13 @@
     </div>
   </body>
   <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+
   <script>
+  Vue.prototype.$http = axios
 
-  var s1 = {name: 'Eric', tag: 'Full-stack Engineer', github: 'http://www.github.com/ericmschow', linkedin: 'http://www.linkedin.com/in/ericmschow', portfolio: 'http://www.ericmschow.com', resume: 'http://www.ericmschow.com/resume.pdf',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'}
-  var s2 = {name: 'Frank',
-    tag: 'Backend Engineer',
-    description: 'Two exquisite objection delighted deficient yet its contained. Cordial because are account evident its subject but eat. Can properly followed learning prepared you doubtful yet him. Over many our good lady feet ask that. Expenses own moderate day fat trifling stronger sir domestic feelings. Itself at be answer always exeter up do. Though or my plenty uneasy do. Friendship so considered remarkably be to sentiments. Offered mention greater fifteen one promise because nor. Why denoting speaking fat indulged saw dwelling raillery. '}
-  var s3 = {name: 'John Stevens',
-    tag: 'Front-end Engineer',
-    description: 'Village did removed enjoyed explain nor ham saw calling talking. Securing as informed declared or margaret. Joy horrible moreover man feelings own shy. Request norland neither mistake for yet. Between the for morning assured country believe. On even feet time have an no at. Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common. My little garret repair to desire he esteem. '}
-  var s4 = {name: 'Steven Wilson',
-    tag: 'Web Developer',
-    description: 'To sorry world an at do spoil along. Incommode he depending do frankness remainder to. Edward day almost active him friend thirty piqued. People as period twenty my extent as. Set was better abroad ham plenty secure had horses. Admiration has sir decisively excellence say everything inhabiting acceptance. Sooner settle add put you sudden him. '}
-
-  studentsGlob = [s1, s2, s3, s4]
   // quickly add lots of students
-  studentsGlob.map((student)=>{studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student)})
+  // studentsGlob.map((student)=>{studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student)})
   // console.log('studentsGlob prior to vue init: ', studentsGlob)
 
   Vue.component('studentslist', {
@@ -118,25 +108,50 @@
     //   rows: this.getRows()
     // },
     created: function() {
-        // console.log('created')
-        // console.log(studentsGlob)
-        this.students = studentsGlob.sort(function(a, b){return 0.5 - Math.random()}); // to be replaced by DB call
-        // console.log(this.students)
-        this.getRows()
+      console.log('created')
+      // console.log(studentsGlob)
+      // call database
+      this.$http.get('http://localhost:9010/api/')
+        .then((response) => {
+          console.log(response.data)
+        //  this.students = studentsGlob.sort(function(a, b){return 0.5 - Math.random()});
+          this.getRows(response.data)
+        })
+
     },
     methods: {
       getStudent: function() {
         let stud = this.students.shift();
+        console.log(stud, typeof(stud))
         // console.log('getting student ', stud, this.students.length, this.students)
         return stud
       },
-      getRows: function() {
+      getRows: function(students) {
         // console.log(this)
-        let total = Math.ceil(this.students.length/3);
+        this.students = students
+        // round up since we need a row even if not full
+        let totalRows = Math.ceil(students.length/3);
         // console.log('getting rows: total ', total)
-        for (let i = 0; i < total; i++){
-          this.rows.push([this.getStudent(), this.getStudent(), this.getStudent()])
-          // console.log(this.rows)
+        let row = []
+        for (let i = 0; i < totalRows; i++){
+          // only add students to row if they exist
+          let stud0 = this.getStudent()
+          console.log('stud0 is ', stud0)
+          if (stud0 !== undefined) {
+            row.push(stud0)
+            let stud1 = this.getStudent()
+            console.log('stud1 is ', stud1)
+            if (stud1 !== undefined) {
+              row.push(stud1)
+              let stud2 = this.getStudent()
+              console.log('stud2 is ', stud2)
+              if (stud2 !== undefined){
+                row.push(stud2)
+              }
+            }
+          }
+          this.rows.push(row)
+          console.log(this.rows)
         }
       }
     }
@@ -148,12 +163,7 @@
       :student=student
       ></alum>
       </div>`,
-    props: ['students'],
-    computed: {
-      studentsComputed: function(){
-        return [this.students[0], this.students[1], this.students[2]]
-      }
-    }
+    props: ['students']
   })
   Vue.component('alum', {
     template: `
