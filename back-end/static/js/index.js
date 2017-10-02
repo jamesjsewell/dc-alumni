@@ -23,17 +23,12 @@ Vue.component('studentslist', {
     students: [],
     rows: []
   }},
-  // computed: {
-  //   rows: this.getRows()
-  // },
   created: function() {
     // call database
-    axios.get('http://localhost:9010/api/')
+    axios.get(`http://localhost:8888/api/`)
       .then((response) => {
-        // console.log(response.data)
         this.getRows(response.data)
       })
-
   },
   methods: {
     getStudent: function() {
@@ -71,12 +66,12 @@ Vue.component('studentslist', {
 })
 Vue.component('alum-row', {
   template: `<div class='row alum-row'>
-    <alum
+    <alum-container
     v-for='student, index in students'
     :student=student
-		index=index
     :arrlength=arrlength
-    ></alum>
+		:index=index
+    ></alum-container>
     </div>`,
   // data: function() {return {students: this.students}},
   props: {students: Array},
@@ -87,81 +82,55 @@ Vue.component('alum-row', {
     console.log('row created, computed ', this.arrlength)
   }
 })
-Vue.component('alum', {
-render: function(h) {
-	if (this.isThree) {
-		return (<div class="col-xs-12 col-sm-4 alum-container">
-							this.alumHTML
-						</div>)
-	}
-
-	else if (this.isTwo) {
-		if (this.index == 0) {
-			return (<div class="col-xs-12 col-sm-4-offset-2 alum-container"> this.alumHTML </div>)
-		} else if (this.index == 1) {
-			return (<div class="col-xs-12 col-sm-4-offset-2 alum-container"> this.alumHTML </div>)
-		} else {
-			console.error('isTwo elseif index not in [0, 1]')
-			return
+Vue.component('alum-container', {
+	template: `<div :class="columnClassVar ">
+		<alum :student=student>
+		</alum>
+	</div>`,
+	props: {student: Object, arrlength: Number, index: Number },
+	computed: {columnClassVar: function() {
+			if (this.arrlength === 3) {
+				// console.log('arr 3')
+				return "col-sm-4 col-xs-12 alum-container"
+			}
+			else if (this.arrlength === 2) {
+				if (this.index === 0) {
+					// console.log('arr 2 0')
+					return "col-sm-4 col-sm-offset-2 col-xs-12 alum-container"
+				} else if (this.index === 1) {
+					// console.log('arr 2 1')
+					return "col-sm-4 col-xs-12 alum-container"
+				} else {
+					console.error('arrlength 2 not getting index')
+				}
+			} else if (this.arrlength === 1) {
+				// console.log('arr 1')
+				return "col-sm-4 col-sm-offset-4 col-xs-12 alum-container"
+			} else {console.error('columnClassVar compute not getting arrlength', this.arrlength)}
 		}
 	}
-	else if (this.isOne) {
-		return (<div class="col-xs-12 col-sm-4-offset-4 alum-container"> this.alumHTML </div>)
-	}
-	else {
-		console.error('Error, no students in row.')
-		return
-	}
-}
-//   template: `
-// <div v-if="isThree" class="col-xs-12 col-sm-4 alum-container">
-// <div v-if="isTwo" class='col-xs-12 col-sm-6 alum-container'>
-// <div v-if="isOne" class='col-xs-12 col-sm-4-offset-4  alum-container'>
-// <div class='alum'>
-//   <h4>{{student.name.toUpperCase()}}</h4>
-//   <h6>{{student.tag.toUpperCase()}}</h6>
-//   <hr class='green1'>
-//   <p>{{student.description}}</p>
-//   <hr class='green1'>
-//   <div class='row icons'>
-//     <a :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-//     <a :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-//     <a :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-//     <a :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
-//   </div>
-//   </div>
-// </div v-if="this.isThree">
-// </div v-if="this.isTwo" >
-// </div v-if="this.isOne" >
-//   `,
-	data: {alumHTML: `<div class='alum'>
-    <h4>{{student.name.toUpperCase()}}</h4>
-    <h6>{{student.tag.toUpperCase()}}</h6>
-    <hr class='green1'>
-    <p>{{student.description}}</p>
-    <hr class='green1'>
-    <div class='row icons'>
-      <a :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-      <a :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-      <a :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-      <a :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
-    </div>
-    </div>`}
+})
+Vue.component('alum', {
+  template: `
+<div class='alum'>
+  <h4>{{student.name.toUpperCase()}}</h4>
+  <h6>{{student.tag.toUpperCase()}}</h6>
+  <hr class='green1'>
+  <p>{{student.description}}</p>
+  <hr class='green1'>
+  <div class='row icons'>
+    <a :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+    <a :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+    <a :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+    <a :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
+  </div>
+</div>`,
   props: {student: Object, arrlength: Number },
+	// data() {return {student: this.student, arrlength: this.arrlength}},
   created: function() {
     console.log('alum created', this.student, this.arrlength)
-    console.log(this.isThree, this.isTwo, this.isOne)
   },
   computed: {
-    isThree: function() {
-      return (this.arrlength == 3)
-    },
-    isTwo: function() {
-      return (this.arrlength == 2)
-    },
-    isOne: function() {
-      return (this.arrlength == 1)
-    },
     github: function() {
       return (this.student.github)
     },

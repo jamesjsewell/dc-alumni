@@ -38,7 +38,7 @@ class AlumniHandler(tornado.web.RequestHandler):
     def get(self):
         # call database
         # write JSON to server
-        self.set_header("Access-Control-Allow-Origin", "http://local.ericmschow.com:9010")
+        self.set_header("Access-Control-Allow-Origin", f"http://local.ericmschow.com:{PORT}")
         self.write(json.dumps(STUDENTSARRAY))
 
 class AlumHandler:
