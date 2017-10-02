@@ -5,6 +5,8 @@ import tornado.web
 import tornado.log
 import tornado.auth
 import requests
+from dotenv import load_dotenv
+load_dotenv('SECRETS.env')
 
 PORT = int(os.environ.get('PORT', '8080'))
 
@@ -36,6 +38,7 @@ class AlumniHandler(tornado.web.RequestHandler):
     def get(self):
         # call database
         # write JSON to server
+        self.set_header("Access-Control-Allow-Origin", "http://local.ericmschow.com:9010")
         self.write(json.dumps(STUDENTSARRAY))
 
 class AlumHandler:
@@ -61,6 +64,7 @@ def make_app():
         (r"/api/", AlumniHandler),
         (r"/api/student", AlumHandler), # for updates
         (r"/auth", AuthHandler),
+        (r'/(favicon.ico)', tornado.web.StaticFileHandler, {"path": ""}),
         (r"/static/(.*)",
           tornado.web.StaticFileHandler,
           {'path': 'static'}),

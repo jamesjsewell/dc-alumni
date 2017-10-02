@@ -2,3 +2,4 @@ tornado==4.5.2
 requests==2.18.4
 psycopg2==2.7.3.1
 peewee==2.10.1
+python-dotenv==0.7.1

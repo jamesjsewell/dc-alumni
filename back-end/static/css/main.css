@@ -63,6 +63,11 @@ body {
   margin-top: 0;
   margin-bottom: 6px;
 }
+@media (min-width: 768px) {
+  .alum h4 {
+    font-size: 1.5rem;
+  }
+}
 .alum h6 {
   color: #A6AAAb;
   padding-right: 3rem;
