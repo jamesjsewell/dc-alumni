@@ -25,7 +25,7 @@ Vue.component('studentslist', {
   }},
   created: function() {
     // call database
-    axios.get(`http://localhost:8888/api/`)
+    axios.get(`http://local.ericmschow.com:8888/api/`)
       .then((response) => {
         this.getRows(response.data)
       })
@@ -113,7 +113,7 @@ Vue.component('alum-container', {
 Vue.component('alum', {
   template: `
 <div class='alum'>
-  <h4>{{student.name.toUpperCase()}}</h4>
+  <h4>{{student.fname.toUpperCase()}} {{student.lname.toUpperCase()}}</h4>
   <h6>{{student.tag.toUpperCase()}}</h6>
   <hr class='green1'>
   <p>{{student.description}}</p>

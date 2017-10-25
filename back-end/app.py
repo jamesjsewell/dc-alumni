@@ -5,24 +5,67 @@ import tornado.web
 import tornado.log
 import tornado.auth
 import requests
+
+from oauth2client import client
+from oauth2client import tools
+from oauth2client.client import AccessTokenCredentials
+
+from peewee import *
 from dotenv import load_dotenv
+from playhouse.db_url import connect
 load_dotenv('SECRETS.env')
 
-PORT = int(os.environ.get('PORT', '8080'))
 
-STUDENTSARRAY = [
-    {'name': 'Eric Schow', 'tag': 'Full-stack Engineer', 'github': 'http://www.github.com/ericmschow', 'linkedin': 'http://www.linkedin.com/in/ericmschow', 'portfolio': 'http://www.ericmschow.com', 'resume': 'http://www.ericmschow.com/resume.pdf',
-    'description': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'},
-    {'name': 'Frank Frankenstein',
-    'tag': 'Backend Engineer',
-    'description': 'Two exquisite objection delighted deficient yet its contained. Cordial because are account evident its subject but eat. Can properly followed learning prepared you doubtful yet him. Over many our good lady feet ask that. Expenses own moderate day fat trifling stronger sir domestic feelings. Itself at be answer always exeter up do. Though or my plenty uneasy do. Friendship so considered remarkably be to sentiments. Offered mention greater fifteen one promise because nor. Why denoting speaking fat indulged saw dwelling raillery. '},
-    {'name': 'John Stevens',
-    'tag': 'Front-end Engineer',
-    'description': 'Village did removed enjoyed explain nor ham saw calling talking. Securing as informed declared or margaret. Joy horrible moreover man feelings own shy. Request norland neither mistake for yet. Between the for morning assured country believe. On even feet time have an no at. Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common. My little garret repair to desire he esteem. '},
-    {'name': 'Steven Wilson',
-    'tag': 'Web Developer',
-    'description': 'To sorry world an at do spoil along. Incommode he depending do frankness remainder to. Edward day almost active him friend thirty piqued. People as period twenty my extent as. Set was better abroad ham plenty secure had horses. Admiration has sir decisively excellence say everything inhabiting acceptance. Sooner settle add put you sudden him. '}
-]
+# DB format for reference
+    # CREATE TABLE alum
+    #     (id SERIAL NOT NULL,
+    #     isAdmin BOOLEAN DEFAULT false,
+    #     isActive BOOLEAN DEFAULT true,
+    #     fname VARCHAR(100),
+    #     lname VARCHAR(100),
+    #     github VARCHAR(100),
+    #     linkedin VARCHAR(100),
+    #     portfolio VARCHAR(100),
+    #     resume VARCHAR(100),
+    #     tag VARCHAR(100),
+    #     description VARCHAR(500))
+DB = connect(
+  os.environ.get(
+    'DATABASE_URL',
+    'postgres://postgres:postgres@localhost:5432/dc_alumni' # local
+  )
+)
+
+
+PORT = int(os.environ.get('PORT', '8080'))
+BASE_URL = os.environ.get('BASE_URL', 'http://local.ericmschow.com:8888/')
+AUTH_URL = BASE_URL + 'auth'
+SETTINGS = {
+    "google_oauth": {
+        "key":
+            os.environ.get('GOOGLE_ID'),
+        "secret":
+            os.environ.get('GOOGLE_SECRET')
+    },
+    "autoreload": True,
+    "cookie_secret": os.environ.get('SECRET'),
+    "login_url": "/auth"
+}
+
+class Alum(Model):
+    id = PrimaryKeyField(unique = True)
+    fname = CharField()
+    lname = CharField()
+    github = CharField()
+    linkedin = CharField()
+    portfolio = CharField()
+    resume = CharField()
+    tag = CharField()
+    description = CharField()
+    isAdmin = BooleanField()
+    isActive = BooleanField()
+    class Meta:
+        database = DB
 
 # with open('static/index.html', 'r') as fh:
     # INDEX = fh.read()
@@ -34,42 +77,93 @@ class FrontendHandler(tornado.web.RequestHandler):
             self.write(fh.read())
             # self.write(INDEX)
 
+# for main list
 class AlumniHandler(tornado.web.RequestHandler):
     def get(self):
-        # call database
-        # write JSON to server
-        self.set_header("Access-Control-Allow-Origin", f"http://local.ericmschow.com:{PORT}")
-        self.write(json.dumps(STUDENTSARRAY))
+        self.set_header("Access-Control-Allow-Origin", BASE_URL)
+        alumni = []
+        # call database, selecting all active students
+        results = Alum.select().where(Alum.isActive == True).dicts()
+        # below needed to convert from Peewee rows to actual objects
+        # peewee rows cannot be converted to JSON
+        for al in results:
+            alumni.append(al)
 
-class AlumHandler:
+        # TODO: implement server cache for alumni list, maybe have a user modifying their data trigger a db call, or simply store the new data serverside and only refresh it occasionally
+
+        # write JSON to server
+        self.write(json.dumps(alumni))
+
+# for individual account
+class AlumHandler(tornado.web.RequestHandler):
     def get(self):
+        # check if logged in
+        # @tornado.web.authenticated
+            # if not logged in, redirect to login
         # call database, return one student info
         pass
+        # cache
 
     def post(self):
         # update database with new student info
         pass
 
-class AuthHandler:
+class GoogleOAuth2LoginHandler(tornado.web.RequestHandler,
+                               tornado.auth.GoogleOAuth2Mixin):
+    @tornado.gen.coroutine
     def get(self):
-        #
-        pass
-    def post(self):
-        # send login info proba
-        pass
+        if self.get_argument('code', False):
+            access = yield self.get_authenticated_user(
+                redirect_uri=AUTH_URL,
+                code=self.get_argument('code'))
+            print(access)
+            # Save the user with e.g. set_secure_cookie
+
+            user = yield self.oauth2_request(
+                "https://www.googleapis.com/oauth2/v1/userinfo",
+                access_token=access["access_token"])
+            print(user)
+
+            # alum, created = Alum.get_or_create(
+            #     user_id=user['id'],
+            #     user_email=user['email'],
+            #     defaults={'name': user['name'], 'token': access}
+            # )
+            # if not created:
+            #     alum.token = access
+            #     alum.save()
+
+            # print("here is the user info:", user)
+            self.set_secure_cookie("user-id", user['id'])
+            print('Cookie set!')
+            self.redirect('profile', {})
+
+        else:
+            yield self.authorize_redirect(
+                redirect_uri=AUTH_URL,
+                client_id=SETTINGS['google_oauth']['key'],
+                scope=['profile', 'email'],
+                response_type='code',
+                extra_params={'approval_prompt': 'auto'}
+                )
+class ProfileHandler(tornado.web.RequestHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.write('hello')
 
 def make_app():
     return tornado.web.Application([
         #(r"/", MainHandler),
         (r"/api/", AlumniHandler),
         (r"/api/student", AlumHandler), # for updates
-        (r"/auth", AuthHandler),
+        (r"/auth.*", GoogleOAuth2LoginHandler),
+        (r"/profile", ProfileHandler),
         (r'/(favicon.ico)', tornado.web.StaticFileHandler, {"path": ""}),
         (r"/static/(.*)",
           tornado.web.StaticFileHandler,
           {'path': 'static'}),
         (r"(.*)", FrontendHandler)
-    ], autoreload=True)
+    ], **SETTINGS)
 
 if __name__ == "__main__":
     tornado.log.enable_pretty_logging()
