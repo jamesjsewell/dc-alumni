@@ -13,6 +13,7 @@ from oauth2client.client import AccessTokenCredentials
 from peewee import *
 from dotenv import load_dotenv
 from playhouse.db_url import connect
+from playhouse.kv import JSONField
 load_dotenv('SECRETS.env')
 
 
@@ -23,12 +24,15 @@ load_dotenv('SECRETS.env')
     #     isActive BOOLEAN DEFAULT true,
     #     fname VARCHAR(100),
     #     lname VARCHAR(100),
+    #     email VARCHAR(100),
     #     github VARCHAR(100),
     #     linkedin VARCHAR(100),
     #     portfolio VARCHAR(100),
     #     resume VARCHAR(100),
     #     tag VARCHAR(100),
-    #     description VARCHAR(500))
+    #     description VARCHAR(500),
+    #     accountId VARCHAR(100),
+    #     token JSON)
 DB = connect(
   os.environ.get(
     'DATABASE_URL',
@@ -57,6 +61,7 @@ class Alum(Model):
     fname = CharField()
     lname = CharField()
     github = CharField()
+    email = CharField()
     linkedin = CharField()
     portfolio = CharField()
     resume = CharField()
@@ -64,13 +69,20 @@ class Alum(Model):
     description = CharField()
     isAdmin = BooleanField()
     isActive = BooleanField()
+    accountId = CharField()
+    token = JSONField()
     class Meta:
         database = DB
 
 # with open('static/index.html', 'r') as fh:
     # INDEX = fh.read()
 
-class FrontendHandler(tornado.web.RequestHandler):
+# required for oauth2
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie("accountId")
+
+class FrontendHandler(BaseHandler):
     def get(self, uri):
         #self.set_header("Content-Type", 'text/plain')
         with open('static/index.html', 'r') as fh:
@@ -78,37 +90,40 @@ class FrontendHandler(tornado.web.RequestHandler):
             # self.write(INDEX)
 
 # for main list
-class AlumniHandler(tornado.web.RequestHandler):
+class AlumniHandler(BaseHandler):
     def get(self):
         self.set_header("Access-Control-Allow-Origin", BASE_URL)
         alumni = []
-        # call database, selecting all active students
-        results = Alum.select().where(Alum.isActive == True).dicts()
+        # call database, selecting all active students and retrieving only information needed on front-end
+        results = Alum.select(Alum.fname, Alum.lname, Alum.github, Alum.linkedin, Alum.portfolio, Alum.resume, Alum.tag, Alum.description, Alum.email).where(Alum.isActive == True).dicts()
         # below needed to convert from Peewee rows to actual objects
         # peewee rows cannot be converted to JSON
         for al in results:
             alumni.append(al)
 
         # TODO: implement server cache for alumni list, maybe have a user modifying their data trigger a db call, or simply store the new data serverside and only refresh it occasionally
+        # maybe a better idea would be to store a lastUpdated timestamp
+        # and only retrieve data where lastUpdated > most recently retrieved alum's lastUpdated
 
-        # write JSON to server
+        # write JSON to browser
         self.write(json.dumps(alumni))
 
 # for individual account
-class AlumHandler(tornado.web.RequestHandler):
+class AlumHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
-        # check if logged in
-        # @tornado.web.authenticated
-            # if not logged in, redirect to login
-        # call database, return one student info
-        pass
-        # cache
+        # call database, return one student info linking to user-id
+        userString = self.current_user.decode('ascii')
+        user = Alum.get(Alum.accountId == userString).dicts()
+        print('AlumHandler user ', user)
+        # write JSON to browser
+        self.write(json.dumps(user))
 
     def post(self):
         # update database with new student info
         pass
 
-class GoogleOAuth2LoginHandler(tornado.web.RequestHandler,
+class GoogleOAuth2LoginHandler(BaseHandler,
                                tornado.auth.GoogleOAuth2Mixin):
     @tornado.gen.coroutine
     def get(self):
@@ -124,19 +139,28 @@ class GoogleOAuth2LoginHandler(tornado.web.RequestHandler,
                 access_token=access["access_token"])
             print(user)
 
-            # alum, created = Alum.get_or_create(
-            #     user_id=user['id'],
-            #     user_email=user['email'],
-            #     defaults={'name': user['name'], 'token': access}
-            # )
-            # if not created:
-            #     alum.token = access
-            #     alum.save()
+            alum, created = Alum.get_or_create(
+                accountId=user['id'],
+                defaults={'token': access,
+                'fname': user['given_name'],
+                'lname': user['family_name'],
+                'github': '',
+                'linkedin': '',
+                'portfolio': '',
+                'resume': '',
+                'tag': '',
+                'description': '',
+                'isAdmin': False,
+                'isActive': False,
+                'accountId': user['id']}
+            )
+            if not created:
+                alum.token = access
+                alum.save()
 
-            # print("here is the user info:", user)
-            self.set_secure_cookie("user-id", user['id'])
+            self.set_secure_cookie("accountId", user['id'])
             print('Cookie set!')
-            self.redirect('profile', {})
+            self.redirect('profile')
 
         else:
             yield self.authorize_redirect(
@@ -146,17 +170,25 @@ class GoogleOAuth2LoginHandler(tornado.web.RequestHandler,
                 response_type='code',
                 extra_params={'approval_prompt': 'auto'}
                 )
-class ProfileHandler(tornado.web.RequestHandler):
+class ProfileHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.write('hello')
+        with open('static/profile.html', 'r') as fh:
+            self.write(fh.read())
+
+class LogoutHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.clear_cookie("accountId")
+        self.redirect('/')
 
 def make_app():
     return tornado.web.Application([
         #(r"/", MainHandler),
         (r"/api/", AlumniHandler),
-        (r"/api/student", AlumHandler), # for updates
+        (r"/api/student/", AlumHandler), # for updates
         (r"/auth.*", GoogleOAuth2LoginHandler),
+        (r"/logout", LogoutHandler),
         (r"/profile", ProfileHandler),
         (r'/(favicon.ico)', tornado.web.StaticFileHandler, {"path": ""}),
         (r"/static/(.*)",
