@@ -13,7 +13,7 @@ from oauth2client.client import AccessTokenCredentials
 from peewee import *
 from dotenv import load_dotenv
 from playhouse.db_url import connect
-from playhouse.kv import JSONField
+from playhouse.postgres_ext import JSONField
 load_dotenv('SECRETS.env')
 
 
@@ -74,6 +74,21 @@ class Alum(Model):
     class Meta:
         database = DB
 
+    def to_json(self):
+        d = {
+            'fname': self.fname,
+            'lname': self.lname,
+            'github': self.github,
+            'email': self.email,
+            'linkedin': self.linkedin,
+            'portfolio': self.portfolio,
+            'resume': self.resume,
+            'tag': self.tag,
+            'description': self.description,
+            'isActive': self.isActive
+            # 'date': self.date.format('%h')
+        }
+        return json.dumps(d)
 # with open('static/index.html', 'r') as fh:
     # INDEX = fh.read()
 
@@ -114,10 +129,11 @@ class AlumHandler(BaseHandler):
     def get(self):
         # call database, return one student info linking to user-id
         userString = self.current_user.decode('ascii')
-        user = Alum.get(Alum.accountId == userString).dicts()
-        print('AlumHandler user ', user)
+        print(userString)
+        user = Alum.select().where(Alum.accountId == userString).get()
+        print('AlumHandler user ', user.to_json())
         # write JSON to browser
-        self.write(json.dumps(user))
+        self.write(user.to_json())
 
     def post(self):
         # update database with new student info
