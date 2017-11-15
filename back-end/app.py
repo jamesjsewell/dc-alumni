@@ -186,11 +186,14 @@ class GoogleOAuth2LoginHandler(BaseHandler,
                 response_type='code',
                 extra_params={'approval_prompt': 'auto'}
                 )
+                
 class ProfileHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         with open('static/profile.html', 'r') as fh:
             self.write(fh.read())
+    def post(self):
+        print
 
 class LogoutHandler(BaseHandler):
     @tornado.web.authenticated

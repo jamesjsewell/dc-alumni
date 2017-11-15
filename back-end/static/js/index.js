@@ -12,6 +12,7 @@ e.exports=function(e){return null!=e&&(n(e)||r(e)||!!e._isBuffer)}},function(e,t
 // studentsGlob.map((student)=>{studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student);studentsGlob.push(student)})
 // console.log('studentsGlob prior to vue init: ', studentsGlob)
 
+
 Vue.component('studentslist', {
   template: `<div id='studentContainer'>
       <alum-row
@@ -158,9 +159,7 @@ Vue.component('alum', {
   }
 })
 
-// var app = new Vue({
-//   el: '#app',
-// })
 const app = new Vue({
-  el: '#app'
+  el: '#app',
+	components: {"navbar": navbar}
 })
