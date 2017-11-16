@@ -11,7 +11,7 @@ Vue.component('studentslist', {
   }},
   created: function() {
     // call database
-    axios.get(`http://local.ericmschow.com:8888/api/`)
+    axios.get(document.URL + 'api/')
       .then((response) => {
         this.getRows(response.data)
       })

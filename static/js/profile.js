@@ -1,6 +1,6 @@
 Vue.component('profile', {
   template: `<div id='profileContainer' class="row">
-	<form id="profileForm" class="form-horizontal col-sm-12" method="POST" action="/api/student/">
+	<form id="profileForm" class="form-horizontal col-sm-12" method="POST" action="/profile/api/">
 	<h2 class="text-center">Your Profile</h2>
   <div class="form-group">
     <label for="fname" class="col-sm-2 control-label">Full Name</label>
@@ -42,10 +42,10 @@ Vue.component('profile', {
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="tag" class="col-sm-2 control-label">Tag</label>
+		<label for="tag" class="col-sm-2 control-label">Tagline</label>
 		<div class="col-sm-9">
 		<select v-bind:value="tag" class="form-control" name="tag">
-			<option value="Full-stack Engineer">Full-stack Engineer</option>
+			<option selected="selected" value="Full-stack Engineer">Full-stack Engineer</option>
 			<option value="Front-end Engineer">Front-end Engineer</option>
 			<option value="Back-end Engineer">Back-end Engineer</option>
 			<option value="Web Developer">Web Developer</option>
@@ -61,7 +61,7 @@ Vue.component('profile', {
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
 			<div class="checkbox">
-				<label><input v-bind:value="isActive" type="checkbox" name="isActive" checked value="">Uncheck here once you've gotten a job to hide your profile.</label>
+				<label><input v-bind:checked="isActive" type="checkbox" name="isActive" value="">Uncheck here once you've gotten a job to hide your profile.</label>
 			</div>
 		</div>
 	</div>
@@ -87,7 +87,8 @@ Vue.component('profile', {
   }},
   created: function() {
     // call database
-    axios.get(`http://local.ericmschow.com:8888/api/student/`)
+    axios.get(document.URL + '/api/')
+    // axios.get(`http://local.ericmschow.com:8888/profile/api/`)
       .then((response) => {
         this.handleData(response.data)
       })
@@ -97,7 +98,7 @@ Vue.component('profile', {
 			console.log(data)
 			this.fname = data.fname
 			this.lname = data.lname
-			this.tag = data.tag
+			this.tag = data.tag || 'Full-stack Engineer' // for default since no placeholder on select
 			this.email = data.email
 			this.description = data.description
 			this.github = data.github
@@ -109,57 +110,6 @@ Vue.component('profile', {
     }
   }
 })
-Vue.component('alum', {
-  template: `
-<div class='alum'>
-  <h4>{{student.fname.toUpperCase()}} {{student.lname.toUpperCase()}}</h4>
-  <h6>{{student.tag.toUpperCase()}}</h6>
-  <hr class='green1'>
-  <p>{{student.description}}</p>
-  <hr class='green1'>
-  <div class='row icons'>
-    <a :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-    <a :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-    <a :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-    <a :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
-  </div>
-</div>`,
-  props: {student: Object, arrlength: Number },
-	// data() {return {student: this.student, arrlength: this.arrlength}},
-  created: function() {
-    console.log('alum created', this.student, this.arrlength)
-  },
-  computed: {
-    github: function() {
-      return (this.student.github)
-    },
-    linkedin: function() {
-      return (this.student.linkedin)
-    },
-    resume: function() {
-      return (this.student.resume)
-    },
-    portfolio: function() {
-      return (this.student.portfolio)
-    },
-    githubtitle: function() {
-      return ('' + this.student.name + "'s GitHub Account")
-    },
-    linkedintitle: function() {
-      return ('' + this.student.name + "'s LinkedIn Account")
-    },
-    resumetitle: function() {
-      return ('' + this.student.name + "'s Resume")
-    },
-    portfoliotitle: function() {
-      return ('' + this.student.name + "'s Personal Website and Portfolio")
-    }
-  }
-})
-
-// var app = new Vue({
-//   el: '#app',
-// })
 const app = new Vue({
   el: '#app'
 })

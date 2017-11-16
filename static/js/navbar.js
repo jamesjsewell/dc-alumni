@@ -20,7 +20,7 @@ Vue.component('navbar', {
             <li><a id="registryLink" href="/">View Current Job Seekers</a></li>
             <li><a href="mailto:hello@digitalcrafts.com">Email DigitalCrafts</a></li>
             <li><a href="/profile">Student Profile</a></li>
-            <li v-if="loggedin"><a href="/logout">Logout</a></li>
+            <li><a href="/logout">Logout</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

@@ -142,6 +142,12 @@ class AlumHandler(BaseHandler):
         for attr in self.request.arguments.items():
             # escape user input! always!
             responses[attr[0]] = tornado.escape.xhtml_escape(self.get_body_argument(attr[0]))
+        print(responses)
+        if 'isActive' in responses: # comes through as '' if box is checked
+            responses['isActive'] = True
+        else:
+            responses['isActive'] = False
+        print(responses)
         # update database with new alum info
         q = Alum.update(fname=responses['fname'],
         lname=responses['lname'],
@@ -217,8 +223,8 @@ class LogoutHandler(BaseHandler):
 def make_app():
     return tornado.web.Application([
         #(r"/", MainHandler),
-        (r"/api/", AlumniHandler),
-        (r"/api/student/", AlumHandler), # for individual profile data requests
+        (r"/api/", AlumniHandler), # for GETting all active alumni
+        (r"/profile/api/", AlumHandler), # for individual profile data requests
         (r"/auth.*", GoogleOAuth2LoginHandler),
         (r"/logout", LogoutHandler),
         (r"/profile", ProfileHandler),

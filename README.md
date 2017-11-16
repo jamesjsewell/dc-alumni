@@ -17,4 +17,5 @@ Created by Eric Schow, a DigitalCrafts alumnus from the April 2017 Houston cohor
 * `pip install -r requirements.txt`
 * to use less & watch-run, `npm install`
 * create SECRETS.ENV file containing `PORT`, `DATABASE_URL`, `SECRET`, `GOOGLE_SECRET`, and `GOOGLE_ID`
+* Consider whether to swap Vue from Production mode by changing the CDN in the HTML pages
 * `python3 app.py` and go!
