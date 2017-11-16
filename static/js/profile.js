@@ -20,25 +20,37 @@ Vue.component('profile', {
   <div class="form-group">
     <label for="linkedin" class="col-sm-2 control-label">LinkedIn</label>
     <div class="col-sm-9">
-      <input v-bind:value="linkedin" type="text" class="form-control" name="linkedin" placeholder="Link to your LinkedIn account." maxlength="50">
+      <div class="input-group">
+        <span class="input-group-addon">http://linkedin.com/in/</span>
+        <input v-bind:value="linkedin" type="text" class="form-control" name="linkedin" placeholder="Link to your LinkedIn account." maxlength="50">
+      </div>
     </div>
   </div>
 	<div class="form-group">
     <label for="github" class="col-sm-2 control-label">GitHub</label>
     <div class="col-sm-9">
-      <input v-bind:value="github" type="text" class="form-control" name="github" placeholder="Link to your GitHub account." maxlength="50">
+      <div class="input-group">
+        <span class="input-group-addon">http://github.com/</span>
+        <input v-bind:value="github" type="text" class="form-control" name="github" placeholder="Link to your GitHub account." maxlength="50">
+      </div>
     </div>
   </div>
 	<div class="form-group">
 		<label for="portfolio" class="col-sm-2 control-label">Portfolio</label>
 		<div class="col-sm-9">
-			<input v-bind:value="portfolio" type="text" class="form-control" name="portfolio" placeholder="Link to your personal portfolio." maxlength="50">
+      <div class="input-group">
+        <span class="input-group-addon">http://</span>
+  			<input v-bind:value="portfolio" type="text" class="form-control" name="portfolio" placeholder="Link to your personal portfolio." maxlength="50">
+      </div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="resume" class="col-sm-2 control-label">Resume</label>
 		<div class="col-sm-9">
-			<input v-bind:value="resume" type="text" class="form-control" name="resume" placeholder="Link to your resume, hosted on your portfolio." maxlength="50">
+      <div class="input-group">
+        <span class="input-group-addon">http://</span>
+  			<input v-bind:value="resume" type="text" class="form-control" name="resume" placeholder="Link to your resume, hosted on your portfolio." maxlength="50">
+      </div>
 		</div>
 	</div>
 	<div class="form-group">
@@ -95,7 +107,6 @@ Vue.component('profile', {
   },
   methods: {
     handleData: function(data) {
-			console.log(data)
 			this.fname = data.fname
 			this.lname = data.lname
 			this.tag = data.tag || 'Full-stack Engineer' // for default since no placeholder on select

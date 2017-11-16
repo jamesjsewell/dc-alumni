@@ -107,16 +107,16 @@ Vue.component('alum', {
   props: {student: Object, arrlength: Number },
   computed: {
     github: function() {
-      return (this.student.github)
+      return (`https://github.com/${this.student.github}`)
     },
     linkedin: function() {
-      return (this.student.linkedin)
+      return (`https://linkedin.com/in/${this.student.linkedin}`)
     },
     resume: function() {
-      return (this.student.resume)
+      return (`http://${this.student.resume}`)
     },
     portfolio: function() {
-      return (this.student.portfolio)
+      return (`http://${this.student.portfolio}`)
     },
     githubtitle: function() {
       return (`${this.student.fname} ${this.student.lname}'s GitHub Account`)
