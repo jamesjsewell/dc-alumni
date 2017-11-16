@@ -4,6 +4,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.log
 import tornado.auth
+import tornado.escape
 import requests
 
 from oauth2client import client
@@ -129,15 +130,31 @@ class AlumHandler(BaseHandler):
     def get(self):
         # call database, return one student info linking to user-id
         userString = self.current_user.decode('ascii')
-        print(userString)
         user = Alum.select().where(Alum.accountId == userString).get()
-        print('AlumHandler user ', user.to_json())
+        # print('AlumHandler user ', user.to_json())
         # write JSON to browser
         self.write(user.to_json())
 
+    @tornado.web.authenticated
     def post(self):
-        # update database with new student info
-        pass
+        userString = self.current_user.decode('ascii')
+        responses = {}
+        for attr in self.request.arguments.items():
+            # escape user input! always!
+            responses[attr[0]] = tornado.escape.xhtml_escape(self.get_body_argument(attr[0]))
+        # update database with new alum info
+        q = Alum.update(fname=responses['fname'],
+        lname=responses['lname'],
+        github=responses['github'],
+        linkedin=responses['linkedin'],
+        portfolio=responses['portfolio'],
+        resume=responses['resume'],
+        tag=responses['tag'],
+        description=responses['description'],
+        isActive=responses['isActive']).where(Alum.accountId == userString)
+        q.execute()
+        self.redirect('/profile')
+
 
 class GoogleOAuth2LoginHandler(BaseHandler,
                                tornado.auth.GoogleOAuth2Mixin):
@@ -147,13 +164,12 @@ class GoogleOAuth2LoginHandler(BaseHandler,
             access = yield self.get_authenticated_user(
                 redirect_uri=AUTH_URL,
                 code=self.get_argument('code'))
-            print(access)
-            # Save the user with e.g. set_secure_cookie
+            # print(access)
 
             user = yield self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v1/userinfo",
                 access_token=access["access_token"])
-            print(user)
+            # print(user)
 
             alum, created = Alum.get_or_create(
                 accountId=user['id'],
@@ -175,7 +191,6 @@ class GoogleOAuth2LoginHandler(BaseHandler,
                 alum.save()
 
             self.set_secure_cookie("accountId", user['id'])
-            print('Cookie set!')
             self.redirect('profile')
 
         else:
@@ -185,15 +200,13 @@ class GoogleOAuth2LoginHandler(BaseHandler,
                 scope=['profile', 'email'],
                 response_type='code',
                 extra_params={'approval_prompt': 'auto'}
-                )
-                
+            )
+
 class ProfileHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         with open('static/profile.html', 'r') as fh:
             self.write(fh.read())
-    def post(self):
-        print
 
 class LogoutHandler(BaseHandler):
     @tornado.web.authenticated
@@ -205,7 +218,7 @@ def make_app():
     return tornado.web.Application([
         #(r"/", MainHandler),
         (r"/api/", AlumniHandler),
-        (r"/api/student/", AlumHandler), # for updates
+        (r"/api/student/", AlumHandler), # for individual profile data requests
         (r"/auth.*", GoogleOAuth2LoginHandler),
         (r"/logout", LogoutHandler),
         (r"/profile", ProfileHandler),

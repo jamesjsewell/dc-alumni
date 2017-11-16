@@ -23,9 +23,6 @@ body {
   padding-top: 4rem;
   width: 80vw;
   margin: auto;
-  /*position: fixed;*/
-  left: 10vw;
-  right: 10vw;
   height: 100%;
 }
 .profileForm {
@@ -116,6 +113,9 @@ body {
   margin-right: 1rem;
   cursor: pointer;
 }
+.alum a:hover {
+  color: red
+}
 .icons {
   text-align: center;
   font-size: 2.5em;
@@ -139,20 +139,10 @@ body {
   font-size: 4.5em;
   font-weight: 700;
 }
-.btn-light {
-  border-radius: 0;
-  color: #7bC242;
-  background-color: rgba(25, 25, 112, 0.6);
-}
-.btn-light:hover,
-.btn-light:focus,
-.btn-light:active {
-  color: #7bC242;
-  background-color: rgba(25, 25, 112, 0.8);
-}
-/*
-COLORS
-*/
+
+/*******************************
+COLORS - from DC wrench logo
+*******************************/
 .green1 {
   color: #7bC242;
   border-color: #7bC242;
