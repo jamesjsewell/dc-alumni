@@ -98,10 +98,10 @@ Vue.component('alum', {
   <p>{{student.description}}</p>
   <hr class='green1'>
   <div class='row icons'>
-    <a :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-    <a :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-    <a :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
-    <a :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
+    <a v-if=student.github :title=githubtitle :href=github target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+    <a v-if=student.linkedin :title=linkedintitle :href=linkedin target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+    <a v-if=student.resume :title=resumetitle :href=resume target="_blank"><i class="fa fa-file-text-o" aria-hidden="true"></i></a>
+    <a v-if=student.portfolio :title=portfoliotitle :href=portfolio target="_blank"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
   </div>
 </div>`,
   props: {student: Object, arrlength: Number },
@@ -119,16 +119,16 @@ Vue.component('alum', {
       return (this.student.portfolio)
     },
     githubtitle: function() {
-      return ('' + this.student.name + "'s GitHub Account")
+      return (`${this.student.fname} ${this.student.lname}'s GitHub Account`)
     },
     linkedintitle: function() {
-      return ('' + this.student.name + "'s LinkedIn Account")
+      return (`${this.student.fname} ${this.student.lname}'s LinkedIn Account`)
     },
     resumetitle: function() {
-      return ('' + this.student.name + "'s Resume")
+      return (`${this.student.fname} ${this.student.lname}'s Resume`)
     },
     portfoliotitle: function() {
-      return ('' + this.student.name + "'s Personal Website and Portfolio")
+      return (`${this.student.fname} ${this.student.lname}'s Personal Website and Portfolio`)
     }
   }
 })

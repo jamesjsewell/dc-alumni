@@ -5,40 +5,40 @@ Vue.component('profile', {
   <div class="form-group">
     <label for="fname" class="col-sm-2 control-label">Full Name</label>
     <div class="col-sm-4">
-			<input v-bind:value="fname" type="text" class="form-control" name="fname" placeholder="First Name">
+			<input v-bind:value="fname" type="text" class="form-control" name="fname" placeholder="First Name" maxlength="50">
 		</div>
 		<div class="col-sm-5">
-	    <input v-bind:value="lname" type="text" class="form-control" name="lname" placeholder="Last Name">
+	    <input v-bind:value="lname" type="text" class="form-control" name="lname" placeholder="Last Name" maxlength="50">
 		</div>
   </div>
   <div class="form-group">
     <label for="email" class="col-sm-2 control-label">Email</label>
     <div class="col-sm-9">
-      <input v-bind:value="email" type="email" class="form-control" name="email" placeholder="Email address">
+      <input v-bind:value="email" type="email" class="form-control" name="email" placeholder="Email address" maxlength="50">
     </div>
   </div>
   <div class="form-group">
     <label for="linkedin" class="col-sm-2 control-label">LinkedIn</label>
     <div class="col-sm-9">
-      <input v-bind:value="linkedin" type="text" class="form-control" name="linkedin" placeholder="Link to your LinkedIn account.">
+      <input v-bind:value="linkedin" type="text" class="form-control" name="linkedin" placeholder="Link to your LinkedIn account." maxlength="50">
     </div>
   </div>
 	<div class="form-group">
     <label for="github" class="col-sm-2 control-label">GitHub</label>
     <div class="col-sm-9">
-      <input v-bind:value="github" type="text" class="form-control" name="github" placeholder="Link to your GitHub account.">
+      <input v-bind:value="github" type="text" class="form-control" name="github" placeholder="Link to your GitHub account." maxlength="50">
     </div>
   </div>
 	<div class="form-group">
 		<label for="portfolio" class="col-sm-2 control-label">Portfolio</label>
 		<div class="col-sm-9">
-			<input v-bind:value="portfolio" type="text" class="form-control" name="portfolio" placeholder="Link to your personal portfolio.">
+			<input v-bind:value="portfolio" type="text" class="form-control" name="portfolio" placeholder="Link to your personal portfolio." maxlength="50">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="resume" class="col-sm-2 control-label">Resume</label>
 		<div class="col-sm-9">
-			<input v-bind:value="resume" type="text" class="form-control" name="resume" placeholder="Link to your resume, hosted on your portfolio.">
+			<input v-bind:value="resume" type="text" class="form-control" name="resume" placeholder="Link to your resume, hosted on your portfolio." maxlength="50">
 		</div>
 	</div>
 	<div class="form-group">
@@ -55,7 +55,7 @@ Vue.component('profile', {
 	<div class="form-group">
 		<label for="description" class="col-sm-2 control-label">Description</label>
 		<div class="col-sm-9">
-			<textarea v-bind:value="description" class="form-control" rows="5" name="description" placeholder="Put your elevator pitch here."></textarea>
+			<textarea v-bind:value="description" class="form-control" rows="5" name="description" placeholder="Put your elevator pitch here." maxlength="500"></textarea>
 		</div>
 	</div>
   <div class="form-group">
