@@ -159,7 +159,7 @@ class AlumHandler(BaseHandler):
         description=responses['description'],
         isActive=responses['isActive']).where(Alum.accountId == userString)
         q.execute()
-        self.redirect('/profile')
+        self.redirect('/')
 
 
 class GoogleOAuth2LoginHandler(BaseHandler,

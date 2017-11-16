@@ -82,7 +82,7 @@ Vue.component('profile', {
 		github: '',
 		resume: '',
 		portfolio: '',
-		isActive: false,
+		isActive: true,
 		isAdmin: false,
   }},
   created: function() {
@@ -106,7 +106,7 @@ Vue.component('profile', {
 			this.resume = data.resume
 			this.portfolio = data.portfolio
 			this.isAdmin = data.isAdmin
-			this.isActive = data.isActive
+			this.isActive = data.isActive || true // to make checkbox default
     }
   }
 })
