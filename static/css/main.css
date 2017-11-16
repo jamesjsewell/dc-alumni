@@ -16,34 +16,7 @@ body {
 .centered {
   margin: auto;
 }
-/*
-              CUSTOM COMPONENT STYLES
-*/
-#profileContainer {
-  padding-top: 5rem;
-  width: 80vw;
-  margin: auto;
-  height: 100%;
-}
-#profileForm {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 5px solid #1E8ECE;
-  border-style: ridge;
-  border-radius: 3px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  margin: 2rem;
-  text-align: justify;
-}
-h2 {
-  padding-bottom: 1rem;
-}
-@media (min-width: 768px) {
-  #profileForm {
-    margin: 0;
-  }
-}
-
+/* navbar "View Current Job Seekers" button */
 #registryLink {
   border: 2px solid #1E8ECE;
   /*border-style: ridge;*/
@@ -53,9 +26,11 @@ h2 {
   padding: 4px 8px 4px 8px;
   margin: 9px;
 }
-
+/********
+  MAIN PAGE STYLES
+********/
 #studentContainer {
-  padding: 6rem 3rem 0 3rem;
+  padding: 8rem 3rem 0 3rem;
 }
 .alum-row {
   padding-left: 0;
@@ -127,9 +102,6 @@ h2 {
   margin-right: 1rem;
   cursor: pointer;
 }
-.alum a:hover {
-  color: red
-}
 .icons {
   text-align: center;
   font-size: 2.5em;
@@ -153,10 +125,51 @@ h2 {
   font-size: 4.5em;
   font-weight: 700;
 }
-
-/*******************************
-COLORS - from DC wrench logo
-*******************************/
+.btn-light {
+  border-radius: 0;
+  color: #7bC242;
+  background-color: rgba(25, 25, 112, 0.6);
+}
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active {
+  color: #7bC242;
+  background-color: rgba(25, 25, 112, 0.8);
+}
+/* Custom Horizontal Rule */
+hr.small {
+  max-width: 100px;
+}
+/********
+  PROFILE PAGE STYLES
+********/
+#profileContainer {
+  padding-top: 5rem;
+  width: 80vw;
+  margin: auto;
+  height: 100%;
+}
+#profileForm {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 5px solid #1E8ECE;
+  border-style: ridge;
+  border-radius: 3px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  margin: 2rem;
+  text-align: justify;
+}
+h2 {
+  padding-bottom: 1rem;
+}
+@media (min-width: 768px) {
+  #profileForm {
+    margin: 0;
+  }
+}
+/**********
+  CUSTOM COLOR CLASSES FOR SEMI-EASY CUSTOMIZATION
+***********/
 .green1 {
   color: #7bC242;
   border-color: #7bC242;
@@ -208,41 +221,4 @@ COLORS - from DC wrench logo
 .grey4 {
   color: #6D6E70;
   border-color: #6D6E70;
-}
-.modal-content {
-  background-color: #1E8ECE;
-}
-.modal-title,
-.modal-content,
-.modal-body {
-  color: white;
-}
-.modal-open .modal {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.close {
-  color: #fff;
-  text-shadow: #fff;
-  opacity: 60%;
-}
-.close:hover {
-  color: #1E8ECE;
-  opacity: 100%;
-}
-.modal-title {
-  font-size: 2em;
-}
-.modal-header,
-.modal-footer {
-  border-color: #5b893E;
-}
-.modal-title > a {
-  color: #fff;
-}
-.modal-body > a {
-  color: #5b893E;
-}
-.modal-content > a {
-  color: white;
 }
