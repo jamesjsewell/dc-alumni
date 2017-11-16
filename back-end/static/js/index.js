@@ -30,22 +30,18 @@ Vue.component('studentslist', {
         let row = []
         // only add students to row if they exist
         let stud0 = this.getStudent()
-        console.log('stud0 is ', stud0)
         if (stud0 !== null) {
           row.push(stud0)
           let stud1 = this.getStudent()
-          console.log('stud1 is ', stud1)
           if (stud1 !== null) {
             row.push(stud1)
             let stud2 = this.getStudent()
-            console.log('stud2 is ', stud2)
             if (stud2 !== null){
               row.push(stud2)
             }
           }
         }
         this.rows.push(row)
-        console.log('rows are ', this.rows)
       }
     }
   }
@@ -62,11 +58,8 @@ Vue.component('alum-row', {
   // data: function() {return {students: this.students}},
   props: {students: Array},
   computed: {
-    arrlength: function() {console.log('arrlength computered'); return Number(this.students.length)}
+    arrlength: function() {return Number(this.students.length)}
   },
-  created: function() {
-    console.log('row created, computed ', this.arrlength)
-  }
 })
 Vue.component('alum-container', {
 	template: `<div :class="columnClassVar ">
@@ -87,7 +80,7 @@ Vue.component('alum-container', {
 					// console.log('arr 2 1')
 					return "col-sm-4 col-xs-12 alum-container"
 				} else {
-					console.error('arrlength 2 not getting index')
+					// console.error('arrlength 2 not getting index')
 				}
 			} else if (this.arrlength === 1) {
 				// console.log('arr 1')
@@ -112,10 +105,6 @@ Vue.component('alum', {
   </div>
 </div>`,
   props: {student: Object, arrlength: Number },
-	// data() {return {student: this.student, arrlength: this.arrlength}},
-  created: function() {
-    console.log('alum created', this.student, this.arrlength)
-  },
   computed: {
     github: function() {
       return (this.student.github)

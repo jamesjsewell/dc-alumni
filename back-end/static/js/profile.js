@@ -1,6 +1,6 @@
 Vue.component('profile', {
   template: `<div id='profileContainer' class="row">
-	<form class="form-horizontal profileForm col-sm-12" method="POST" action="/api/student/">
+	<form id="profileForm" class="form-horizontal col-sm-12" method="POST" action="/api/student/">
 	<h2 class="text-center">Your Profile</h2>
   <div class="form-group">
     <label for="fname" class="col-sm-2 control-label">Full Name</label>

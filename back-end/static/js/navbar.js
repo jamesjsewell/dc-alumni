@@ -17,7 +17,7 @@ Vue.component('navbar', {
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/">Current Job Seekers</a></li>
+            <li><a id="registryLink" href="/">View Current Job Seekers</a></li>
             <li><a href="mailto:hello@digitalcrafts.com">Email DigitalCrafts</a></li>
             <li><a href="/profile">Student Profile</a></li>
             <li v-if="loggedin"><a href="/logout">Logout</a></li>
