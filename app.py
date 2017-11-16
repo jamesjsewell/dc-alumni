@@ -7,9 +7,9 @@ import tornado.auth
 import tornado.escape
 import requests
 
-from oauth2client import client
-from oauth2client import tools
-from oauth2client.client import AccessTokenCredentials
+# from oauth2client import client
+# from oauth2client import tools
+# from oauth2client.client import AccessTokenCredentials
 
 from peewee import *
 from dotenv import load_dotenv
