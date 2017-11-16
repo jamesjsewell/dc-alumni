@@ -20,7 +20,13 @@ Vue.component('navbar', {
             <li><a id="registryLink" href="/">View Current Job Seekers</a></li>
             <li><a href="mailto:hello@digitalcrafts.com">Email DigitalCrafts</a></li>
             <li><a href="/profile">Student Profile</a></li>
+            
+            <!--
             <li><a href="/logout">Logout</a></li>
+
+              UNCOMMENT HERE TO REENABLE LOGOUT
+              need to refactor html serving to enable checking for login,
+              or find a way for Vue to check for the secure cookie -->
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
