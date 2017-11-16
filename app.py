@@ -4,7 +4,6 @@ import tornado.ioloop
 import tornado.web
 import tornado.log
 import tornado.auth
-import tornado.escape
 import requests
 
 # from oauth2client import client
@@ -140,8 +139,7 @@ class AlumHandler(BaseHandler):
         userString = self.current_user.decode('ascii')
         responses = {}
         for attr in self.request.arguments.items():
-            # escape user input! always!
-            responses[attr[0]] = tornado.escape.xhtml_escape(self.get_body_argument(attr[0]))
+            responses[attr[0]] = self.get_body_argument(attr[0])
         print(responses)
         if 'isActive' in responses: # comes through as '' if box is checked
             responses['isActive'] = True
