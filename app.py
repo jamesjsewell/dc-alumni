@@ -4,12 +4,6 @@ import tornado.ioloop
 import tornado.web
 import tornado.log
 import tornado.auth
-import requests
-
-# from oauth2client import client
-# from oauth2client import tools
-# from oauth2client.client import AccessTokenCredentials
-
 from peewee import *
 from dotenv import load_dotenv
 from playhouse.db_url import connect
@@ -18,6 +12,7 @@ load_dotenv('SECRETS.env')
 
 
 # DB format for reference
+# may cause problems with camelcase capitalization on Heroku if you redeploy it
     # CREATE TABLE alum
     #     (id SERIAL NOT NULL,
     #     isAdmin BOOLEAN DEFAULT false,
