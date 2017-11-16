@@ -15,4 +15,6 @@ Created by Eric Schow, a DigitalCrafts alumnus from the April 2017 Houston cohor
 * Clone repository
 * Setup virtual environment
 * `pip install -r requirements.txt`
-* to use less, `npm install`
+* to use less & watch-run, `npm install`
+* create SECRETS.ENV file containing `PORT`, `DATABASE_URL`, `SECRET`, `GOOGLE_SECRET`, and `GOOGLE_ID`
+* `python3 app.py` and go!
