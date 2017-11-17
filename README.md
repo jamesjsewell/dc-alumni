@@ -9,7 +9,7 @@ Created by [Eric Schow](https://ericmschow.com "Eric's Portfolio"), a DigitalCra
 * __Tornado__ - trusty and reliable Python back-end framework
 * __Peewee__ - standard and simple Python object-relational-model
 * __PostgreSQL__ - fast and powerful relational database
-# __OAuth2__ - secure and user-friendly authentication
+* __OAuth2__ - secure and user-friendly authentication
 
 ### To setup locally, for testing
 
