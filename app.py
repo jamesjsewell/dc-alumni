@@ -113,7 +113,7 @@ class AlumniHandler(BaseHandler):
 
         # shuffle alumni to avoid preferential treatment
         shuffle(alumni)
-        
+
         # write JSON to browser
         self.write(json.dumps(alumni))
 
@@ -139,6 +139,7 @@ class AlumHandler(BaseHandler):
             responses['isActive'] = True
         else:
             responses['isActive'] = False
+        print(responses)
         # update database with new alum info
         q = Alum.update(fname=responses['fname'],
         lname=responses['lname'],

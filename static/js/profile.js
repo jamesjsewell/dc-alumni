@@ -65,7 +65,7 @@ Vue.component('profile', {
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-sm-2 control-label">Description</label>
+		<label for="description" class="col-sm-2 control-label">Description<br>500 characters max.</label>
 		<div class="col-sm-9">
 			<textarea v-bind:value="description" class="form-control" rows="5" name="description" placeholder="Put your elevator pitch here." maxlength="500"></textarea>
 		</div>
