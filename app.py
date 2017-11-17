@@ -111,6 +111,8 @@ class AlumniHandler(BaseHandler):
         # maybe a better idea would be to store a lastUpdated timestamp
         # and only retrieve data where lastUpdated > most recently retrieved alum's lastUpdated
 
+        # and maybe store it client-side, too
+
         # shuffle alumni to avoid preferential treatment
         shuffle(alumni)
 
