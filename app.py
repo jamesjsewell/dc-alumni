@@ -4,6 +4,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.log
 import tornado.auth
+from random import shuffle
 from peewee import *
 from dotenv import load_dotenv
 from playhouse.db_url import connect
@@ -81,11 +82,8 @@ class Alum(Model):
             'tag': self.tag,
             'description': self.description,
             'isActive': self.isActive
-            # 'date': self.date.format('%h')
         }
         return json.dumps(d)
-# with open('static/index.html', 'r') as fh:
-    # INDEX = fh.read()
 
 # required for oauth2
 class BaseHandler(tornado.web.RequestHandler):
@@ -94,10 +92,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class FrontendHandler(BaseHandler):
     def get(self, uri):
-        #self.set_header("Content-Type", 'text/plain')
         with open('static/index.html', 'r') as fh:
             self.write(fh.read())
-            # self.write(INDEX)
 
 # for main list
 class AlumniHandler(BaseHandler):
@@ -115,6 +111,9 @@ class AlumniHandler(BaseHandler):
         # maybe a better idea would be to store a lastUpdated timestamp
         # and only retrieve data where lastUpdated > most recently retrieved alum's lastUpdated
 
+        # shuffle alumni to avoid preferential treatment
+        shuffle(alumni)
+        
         # write JSON to browser
         self.write(json.dumps(alumni))
 
@@ -140,10 +139,10 @@ class AlumHandler(BaseHandler):
             responses['isActive'] = True
         else:
             responses['isActive'] = False
-        print(responses)
         # update database with new alum info
         q = Alum.update(fname=responses['fname'],
         lname=responses['lname'],
+        email=responses['email'],
         github=responses['github'],
         linkedin=responses['linkedin'],
         portfolio=responses['portfolio'],
@@ -153,7 +152,6 @@ class AlumHandler(BaseHandler):
         isActive=responses['isActive']).where(Alum.accountId == userString)
         q.execute()
         self.redirect('/')
-
 
 class GoogleOAuth2LoginHandler(BaseHandler,
                                tornado.auth.GoogleOAuth2Mixin):
