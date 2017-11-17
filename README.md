@@ -13,11 +13,10 @@ Created by [Eric Schow](https://ericmschow.com "Eric's Portfolio"), a DigitalCra
 
 ### To setup locally, for testing
 
-* Clone repository
-* Setup virtual environment
+* Clone repository & setup virtual environment
 * `pip3 install -r requirements.txt`
 * to use less & watch-run, `npm install`
-* create SECRETS.ENV file containing `PORT`, `DATABASE_URL`, `SECRET`, `GOOGLE_SECRET`, and `GOOGLE_ID`
+* create SECRETS.ENV file containing `PORT`, `DATABASE_URL`, `SECRET`, `GOOGLE_SECRET`, and `GOOGLE_ID`, from the Heroku env
 * Consider whether to swap Vue from Production mode by changing the CDN in the HTML pages
-* `python3 app.py` and go! Check the command line for the server. It will autodeploy.
+* `python3 app.py` and go! Check the command line for the server. It will automatically redeploy on changes to `app.py`.
 * To deploy, `git push heroku`
