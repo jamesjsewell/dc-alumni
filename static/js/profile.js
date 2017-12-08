@@ -100,7 +100,6 @@ Vue.component('profile', {
   created: function() {
     // call database
     axios.get(document.URL + '/api/')
-    // axios.get(`http://local.ericmschow.com:8888/profile/api/`)
       .then((response) => {
         this.handleData(response.data)
       })

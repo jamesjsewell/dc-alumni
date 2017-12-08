@@ -21,6 +21,7 @@ Vue.component('studentslist', {
       let stud = this.students.shift();
       return stud ? stud : null
     },
+    // creates row of 1-3 students
     getRows: function(students) {
       this.students = students
       // round up since we need a row even if not full
@@ -67,6 +68,7 @@ Vue.component('alum-container', {
 		</alum>
 	</div>`,
 	props: {student: Object, arrlength: Number, index: Number },
+  // determines whether to put offset class
 	computed: {columnClassVar: function() {
 			if (this.arrlength === 3) {
 				// console.log('arr 3')
