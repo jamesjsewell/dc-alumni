@@ -16,8 +16,8 @@ load_dotenv('SECRETS.env')
 # may cause problems with camelcase capitalization on Heroku if you redeploy it
     # CREATE TABLE alum
     #     (id SERIAL NOT NULL,
-    #     isAdmin BOOLEAN DEFAULT false,
-    #     isActive BOOLEAN DEFAULT true,
+    #     is_admin BOOLEAN DEFAULT false,
+    #     is_active BOOLEAN DEFAULT true,
     #     fname VARCHAR(100),
     #     lname VARCHAR(100),
     #     email VARCHAR(100),
@@ -27,18 +27,18 @@ load_dotenv('SECRETS.env')
     #     resume VARCHAR(100),
     #     tag VARCHAR(100),
     #     description VARCHAR(500),
-    #     accountId VARCHAR(100),
+    #     account_id VARCHAR(100),
     #     token JSON)
 DB = connect(
   os.environ.get(
     'DATABASE_URL',
-    'postgres://postgres:postgres@localhost:5432/dc_alumni' # local
+    'postgres://localhost:5432/untitled_database' # local
   )
 )
 
 
 PORT = int(os.environ.get('PORT', '8080'))
-BASE_URL = os.environ.get('BASE_URL', 'http://local.ericmschow.com:8888/')
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8080/')
 AUTH_URL = BASE_URL + 'auth'
 SETTINGS = {
     "google_oauth": {
@@ -63,9 +63,9 @@ class Alum(Model):
     resume = CharField()
     tag = CharField()
     description = CharField()
-    isAdmin = BooleanField()
-    isActive = BooleanField()
-    accountId = CharField()
+    is_admin = BooleanField()
+    is_active = BooleanField()
+    account_id = CharField()
     token = JSONField()
     class Meta:
         database = DB
@@ -88,7 +88,7 @@ class Alum(Model):
 # required for oauth2
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        return self.get_secure_cookie("accountId")
+        return self.get_secure_cookie("account_id")
 
 class FrontendHandler(BaseHandler):
     def get(self, uri):
@@ -101,7 +101,7 @@ class AlumniHandler(BaseHandler):
         self.set_header("Access-Control-Allow-Origin", BASE_URL)
         alumni = []
         # call database, selecting all active students and retrieving only information needed on front-end
-        results = Alum.select(Alum.fname, Alum.lname, Alum.github, Alum.linkedin, Alum.portfolio, Alum.resume, Alum.tag, Alum.description, Alum.email).where(Alum.isActive == True).dicts()
+        results = Alum.select(Alum.fname, Alum.lname, Alum.github, Alum.linkedin, Alum.portfolio, Alum.resume, Alum.tag, Alum.description, Alum.email).where(Alum.is_active == True).dicts()
         # below needed to convert from Peewee rows to actual objects
         # peewee rows cannot be converted to JSON
         for al in results:
@@ -125,7 +125,7 @@ class AlumHandler(BaseHandler):
     def get(self):
         # call database, return one student info linking to user-id
         userString = self.current_user.decode('ascii')
-        user = Alum.select().where(Alum.accountId == userString).get()
+        user = Alum.select().where(Alum.account_id == userString).get()
         # print('AlumHandler user ', user.to_json())
         # write JSON to browser
         self.write(user.to_json())
@@ -152,7 +152,7 @@ class AlumHandler(BaseHandler):
         resume=responses['resume'],
         tag=responses['tag'],
         description=responses['description'],
-        isActive=responses['isActive']).where(Alum.accountId == userString)
+        is_active=responses['isActive']).where(Alum.account_id == userString)
         q.execute()
         self.redirect('/')
 
@@ -169,10 +169,10 @@ class GoogleOAuth2LoginHandler(BaseHandler,
             user = yield self.oauth2_request(
                 "https://www.googleapis.com/oauth2/v1/userinfo",
                 access_token=access["access_token"])
-            # print(user)
+            print(user)
 
             alum, created = Alum.get_or_create(
-                accountId=user['id'],
+                account_id=user['id'],
                 defaults={'token': access,
                 'fname': user['given_name'],
                 'lname': user['family_name'],
@@ -182,15 +182,15 @@ class GoogleOAuth2LoginHandler(BaseHandler,
                 'resume': '',
                 'tag': '',
                 'description': '',
-                'isAdmin': False,
-                'isActive': False,
-                'accountId': user['id']}
+                'is_admin': False,
+                'is_active': False,
+                'account_id': user['id']}
             )
             if not created:
                 alum.token = access
                 alum.save()
 
-            self.set_secure_cookie("accountId", user['id'])
+            self.set_secure_cookie("account_id", user['id'])
             self.redirect('profile')
 
         else:
@@ -211,7 +211,7 @@ class ProfileHandler(BaseHandler):
 class LogoutHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.clear_cookie("accountId")
+        self.clear_cookie("account_id")
         self.redirect('/')
 
 def make_app():
